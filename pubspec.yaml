@@ -23,6 +23,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  equatable: #Object comparison
+  http: #requests
+  dartz: ^0.10.0-nullsafety.0 #programação funcional
+  mocktail: 
 
 
   # The following adds the Cupertino Icons font to your application.
