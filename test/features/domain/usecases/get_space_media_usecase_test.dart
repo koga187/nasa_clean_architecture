@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nasa_clean_architecture/core/usecase/errors/failures.dart';
-import 'package:nasa_clean_architecture/core/usecase/use_case.dart';
 import 'package:nasa_clean_architecture/features/domain/entities/space_media_entity.dart';
 import 'package:nasa_clean_architecture/features/domain/repositories/space_media_repository.dart';
 import 'package:nasa_clean_architecture/features/domain/usescases/get_space_media_from_date_usecase.dart';
@@ -33,7 +32,7 @@ void main() {
   test(
     'should get space media entity for a given date from the repository',
     () async {
-      when(() => repository.getSpaceMediaFromDate(dateTime: tDateTime)).thenAnswer(
+      when(() => repository.getSpaceMediaFromDate(date: tDateTime)).thenAnswer(
           (_) async => Right<Failures, SpaceMediaEntity>(tSpaceMedia));
 
       final result = await useCase(
@@ -41,13 +40,13 @@ void main() {
       ); // é chamado direto pois ele ja esta com o método call dentro dele que quando é o unico método implementado ele é chamado no invoke da classe.
 
       expect(Right(tSpaceMedia), result);
-      verify(() => repository.getSpaceMediaFromDate(dateTime: tDateTime)).called(1);
+      verify(() => repository.getSpaceMediaFromDate(date: tDateTime)).called(1);
     },
   );
   test(
     'should return a Failure when dont\`t succed',
     () async {
-      when(() => repository.getSpaceMediaFromDate(dateTime: captureAny(named: 'dateTime'))).thenAnswer(
+      when(() => repository.getSpaceMediaFromDate(date: captureAny(named: 'date'))).thenAnswer(
           (_) async => Left<Failures, SpaceMediaEntity>(ServerFailure()));
 
       final result = await useCase(
@@ -55,7 +54,7 @@ void main() {
       ); // é chamado direto pois ele ja esta com o método call dentro dele que quando é o unico método implementado ele é chamado no invoke da classe.
 
       expect(Left(ServerFailure()), result);
-      verify(() => repository.getSpaceMediaFromDate(dateTime: tDateTime)).called(1);
+      verify(() => repository.getSpaceMediaFromDate(date: tDateTime)).called(1);
     },
   );
 }
