@@ -4,21 +4,23 @@ class SpaceMediaModel extends SpaceMediaEntity {
   late String explanation;
 
   SpaceMediaModel({
-    required String explanation,
+    required String description,
     required String mediaType,
     required String title,
     required String mediaUrl,
   }) : super(
-          description: explanation,
-          mediaType: mediaType,
-          title: title,
-          mediaUrl: mediaUrl,
-        );
-
+      description: description,
+      mediaType: mediaType,
+      title: title,
+      mediaUrl: mediaUrl,
+    )
+  {
+    explanation = description;
+  }
   factory SpaceMediaModel.fromJson(Map<String, dynamic> json) =>
       SpaceMediaModel(
-        explanation: json['explanation'],
-        mediaType: json['mediaType'],
+        description: json['explanation'],
+        mediaType: json['media_type'],
         title: json['title'],
         mediaUrl: json['url'],
       );
