@@ -23,8 +23,10 @@ class NasaSpaceMediaDataSourceImplementation implements ISpaceMediaDataSource {
     if (response.statusCode == 200) {
       print('json decode - ${jsonDecode(response.data)}');
       return SpaceMediaModel.fromJson(jsonDecode(response.data));
+    } else if (response.statusCode == 500) {
+      throw ServerException();
     }
 
-    throw ServerException();
+    throw Exception();
   }
 }
