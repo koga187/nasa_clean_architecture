@@ -4,11 +4,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nasa_clean_architecture/core/errors/exceptions.dart';
 import 'package:nasa_clean_architecture/core/http_client/http_client.dart';
-import 'package:nasa_clean_architecture/features/data/datasource/space_media_data_source.dart';
 import 'package:nasa_clean_architecture/features/data/datasource/nasa_space_media_datasource_implementation.dart';
+import 'package:nasa_clean_architecture/features/data/datasource/space_media_data_source.dart';
 import 'package:nasa_clean_architecture/features/data/models/space_media_model.dart';
 
-import '../../../mocks/data/models/space_media_mock.dart';
+import '../../../mocks/space_media_mock.dart';
 
 class ClientMocking extends Mock implements HttpClient {}
 
@@ -34,8 +34,7 @@ void main() {
 
   final tSpaceMediaMapMock = jsonDecode(tSpaceMediaMock);
 
-  final tSpaceMediaModelMock =
-      SpaceMediaModel.fromJson(tSpaceMediaMapMock);
+  final tSpaceMediaModelMock = SpaceMediaModel.fromJson(tSpaceMediaMapMock);
 
   test('should call the get method with correct url', () async {
     _successHttpClientMock();
@@ -68,10 +67,14 @@ void main() {
   });
 
   test('should throw a ServerException when call is unccessful', () async {
-    when(() => client.get(any())).thenAnswer((invocation) async => HttpResponse(data: 'something went wrong', statusCode: 500));
+    when(() => client.get(any())).thenAnswer(
+      (invocation) async =>
+          HttpResponse(data: 'something went wrong', statusCode: 500),
+    );
 
-    final result = dataSource.getSpaceMediaFromDate(tDateTime);
-
-    expect(result, throw ServerException());
+    expect(
+      () async => await dataSource.getSpaceMediaFromDate(tDateTime),
+      throwsA(isA<ServerException>()),
+    );
   });
 }

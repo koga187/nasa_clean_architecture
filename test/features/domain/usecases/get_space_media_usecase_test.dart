@@ -6,20 +6,13 @@ import 'package:nasa_clean_architecture/features/domain/entities/space_media_ent
 import 'package:nasa_clean_architecture/features/domain/repositories/space_media_repository.dart';
 import 'package:nasa_clean_architecture/features/domain/usescases/get_space_media_from_date_usecase.dart';
 
+import '../../../mocks/space_media_entity_mock.dart';
+
 class MockSpaceMediaRepository extends Mock implements ISpaceMediaRepository {}
 
 void main() {
   late GetSpaceMediaFromDateUseCase useCase;
   late ISpaceMediaRepository repository;
-
-  final tSpaceMedia = SpaceMediaEntity(
-    description:
-        "What celestial body wears the Necklace Nebula? First, analyses indicate that the Necklace is a planetary nebula, a gas cloud emitted by a star toward the end of its life. Also, what appears to be diamonds in the Necklace are actually bright knots of glowing gas.  In the center of the Necklace Nebula are likely two stars orbiting so close together that they share a common atmosphere and appear as one in the featured image by the Hubble Space Telescope.  The red-glowing gas clouds on the upper left and lower right are the results of jets from the center.  Exactly when and how the bright jets formed remains a topic of research.  The Necklace Nebula is only about 5,000 years old, spans about 5 light years, and can best be found with a large telescope toward the direction of the constellation of the Arrow (Sagitta).",
-    mediaType: "image",
-    title: "Jets from the Necklace Nebula",
-    mediaUrl: "https://apod.nasa.gov/apod/image/2105/Necklace_Hubble_960.jpg",
-  );
-
 
   late DateTime tDateTime;
 
@@ -46,8 +39,10 @@ void main() {
   test(
     'should return a Failure when dont\`t succed',
     () async {
-      when(() => repository.getSpaceMediaFromDate(date: captureAny(named: 'date'))).thenAnswer(
-          (_) async => Left<Failures, SpaceMediaEntity>(ServerFailure()));
+      when(() =>
+              repository.getSpaceMediaFromDate(date: captureAny(named: 'date')))
+          .thenAnswer(
+              (_) async => Left<Failures, SpaceMediaEntity>(ServerFailure()));
 
       final result = await useCase(
         tDateTime,
@@ -55,6 +50,15 @@ void main() {
 
       expect(Left(ServerFailure()), result);
       verify(() => repository.getSpaceMediaFromDate(date: tDateTime)).called(1);
+    },
+  );
+  test(
+    'should return a NullParamFailure when receives a null param',
+    () async {
+      final result = await useCase(null);
+
+      expect(result, Left(NullParamFailure()));
+      verifyNever(() => repository.getSpaceMediaFromDate(date: tDateTime));
     },
   );
 }
